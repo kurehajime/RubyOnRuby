@@ -19,12 +19,36 @@ def evaluate(tree)
             left % right
         when "**"
             left ** right
+        when "=="
+            left == right
+        when "!="
+            left != right
+        when ">"
+            left > right
+        when "<"
+            left < right
+        when "<="
+            left <= right
+        when ">="
+            left <= right
+        end
+    end
+end
+def max(tree)
+    if tree[0] == "lit"
+        tree[1]
+    else
+        left = max tree[1]
+        right = max tree[2]
+        if left >= right
+            left
+        else
+            right
         end
     end
 end
 
-
-tree = minruby_parse("(1 + 2) / 3 * 4 * (56 / 7 + 8 + 9)")
+tree = minruby_parse("1 + 4 + 3")
 answer = evaluate(tree)
 p answer
 
