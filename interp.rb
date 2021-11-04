@@ -1,54 +1,51 @@
 require "minruby"
 
-def evaluate(tree)
-    if tree[0] == "lit"
+def evaluate(tree,env)
+    case tree[0]
+    when "lit"
         tree[1]
-    else
-        left = evaluate tree[1]
-        right = evaluate tree[2]
-        case tree[0]
-        when "+"
-            left + right
-        when "-"
-            left - right
-        when "*"
-            left * right
-        when "/"
-            left / right
-        when "%"
-            left % right
-        when "**"
-            left ** right
-        when "=="
-            left == right
-        when "!="
-            left != right
-        when ">"
-            left > right
-        when "<"
-            left < right
-        when "<="
-            left <= right
-        when ">="
-            left <= right
+    when "+"
+        evaluate(tree[1],env) + evaluate(tree[2],env)
+    when "-"
+        evaluate(tree[1],env) - evaluate(tree[2],env)
+    when "*"
+        evaluate(tree[1],env) * evaluate(tree[2],env)
+    when "/"
+        evaluate(tree[1],env) / evaluate(tree[2],env)
+    when "%"
+        evaluate(tree[1],env) % evaluate(tree[2],env)
+    when "**"
+        evaluate(tree[1],env) ** evaluate(tree[2],env)
+    when "=="
+        evaluate(tree[1],env) == evaluate(tree[2],env)
+    when "!="
+        evaluate(tree[1],env) != evaluate(tree[2],env)
+    when ">"
+        evaluate(tree[1],env) > evaluate(tree[2],env)
+    when "<"
+        evaluate(tree[1],env) < evaluate(tree[2],env)
+    when "<="
+        evaluate(tree[1],env) <= evaluate(tree[2],env)
+    when ">="
+        evaluate(tree[1],env) <= evaluate(tree[2],env)
+    when "func_call"
+        p(evaluate(tree[2],env))
+    when "stmts"
+        i = 1
+        last = nil
+        while tree[i] != nil
+            last = evaluate(tree[i],env)
+            i = i + 1
         end
+        last
+    when "var_assign"
+        env[tree[1]] = evaluate(tree[2],env)
+    when "var_ref"
+        env[tree[1]]
     end
 end
-def max(tree)
-    if tree[0] == "lit"
-        tree[1]
-    else
-        left = max tree[1]
-        right = max tree[2]
-        if left >= right
-            left
-        else
-            right
-        end
-    end
-end
-
-tree = minruby_parse("1 + 4 + 3")
-answer = evaluate(tree)
-p answer
+str = minruby_load()
+tree = minruby_parse(str)
+env = {}
+answer = evaluate(tree,env)
 
