@@ -1,2 +1,11 @@
-answer = (1 + 2) / 3 * 4 * (56 / 7 + 8 + 9)
-p(answer)
+if 1 == 0
+    p(42)
+else
+    p(43)
+end
+
+i = 0
+while i < 10
+ p(i)
+ i = i + 1
+end

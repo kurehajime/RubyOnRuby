@@ -2,6 +2,16 @@ require "minruby"
 
 def evaluate(tree,env)
     case tree[0]
+    when "if"
+        if evaluate(tree[1],env)
+            evaluate(tree[2],env)
+        else
+            evaluate(tree[3],env)
+        end
+    when "while"
+        while evaluate(tree[1],env) do
+            evaluate(tree[2],env)
+        end
     when "lit"
         tree[1]
     when "+"
@@ -48,4 +58,3 @@ str = minruby_load()
 tree = minruby_parse(str)
 env = {}
 answer = evaluate(tree,env)
-
