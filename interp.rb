@@ -5,7 +5,7 @@ def evaluate(tree,env)
     when "if"
         if evaluate(tree[1],env)
             evaluate(tree[2],env)
-        else
+        elsif tree[3]
             evaluate(tree[3],env)
         end
     when "while"
@@ -14,6 +14,10 @@ def evaluate(tree,env)
         end
     when "lit"
         tree[1]
+    when "and"
+        evaluate(tree[1],env) and evaluate(tree[2],env)
+    when "or"
+        evaluate(tree[1],env) or evaluate(tree[2],env)
     when "+"
         evaluate(tree[1],env) + evaluate(tree[2],env)
     when "-"
@@ -56,5 +60,6 @@ def evaluate(tree,env)
 end
 str = minruby_load()
 tree = minruby_parse(str)
+# pp tree
 env = {}
 answer = evaluate(tree,env)
