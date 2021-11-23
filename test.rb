@@ -15,9 +15,3 @@ while i <= 15
  end
  i = i + 1
 end
-
-def add(a,b)
-    a + b
-end
-
-p add(40,2)

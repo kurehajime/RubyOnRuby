@@ -19,6 +19,33 @@ def evaluate(tree,genv,lenv)
         end
     when "func_def"
         genv[tree[1]] = ["user_defined", tree[2], tree[3]]
+    when "ary_new"
+        ary = []
+        i = 0
+        while tree[i + 1]
+            ary[i] = evaluate(tree[i + 1], genv, lenv)
+            i = i + 1
+        end
+        ary
+    when "ary_ref"
+        ary = evaluate(tree[1], genv, lenv)
+        idx = evaluate(tree[2], genv, lenv)
+        ary[idx]
+    when "ary_assign"
+        ary = evaluate(tree[1], genv, lenv)
+        idx = evaluate(tree[2], genv, lenv)
+        val = evaluate(tree[3], genv, lenv)
+        ary[idx] = val
+    when "hash_new"
+        hsh = {}
+        i = 0
+        while tree[i + 1]
+            key = evaluate(tree[i + 1], genv, lenv)
+            val = evaluate(tree[i + 2], genv, lenv)
+            hsh[key] = val
+            i = i + 2
+        end
+         hsh
     when "lit"
         tree[1]
     when "and"
@@ -57,7 +84,7 @@ def evaluate(tree,genv,lenv)
             i = i + 1
         end
         mhd = genv[tree[1]]
-        if mhd[0] == "built_in" 
+        if mhd[0] == "builtin" 
             minruby_call(mhd[1], args)
         else
             new_lenv = {}
@@ -89,6 +116,12 @@ end
 str = minruby_load()
 tree = minruby_parse(str)
 # pp tree
-genv = {"p" => ["built_in","p"]}
+genv = {
+    "p" => ["builtin", "p"],
+    "require" => ["builtin", "require"],
+    "minruby_parse" => ["builtin", "minruby_parse"],
+    "minruby_load" => ["builtin", "minruby_load"],
+    "minruby_call" => ["builtin", "minruby_call"],
+}
 lenv = {}
 answer = evaluate(tree,genv,lenv)
